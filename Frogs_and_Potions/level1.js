@@ -404,7 +404,7 @@ class level1 extends Phaser.Scene {
 
         //winning scene
         if (this.player.x > 914 && this.player .x < 994 && this.player.y > 1079 && this.player.y < 1114) {
-          console.log("home location")
+          //console.log("home location")
           console.log(window.potionGiven)
           if (window.potionGiven > 6) {
             console.log("jumping to winning scene")
