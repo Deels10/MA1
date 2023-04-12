@@ -173,7 +173,7 @@ class level3 extends Phaser.Scene {
     update () {
 
         //market place exit
-        if ( this.player.x > 596 && this.player.y <319) {
+        if ( this.player.x > 592 && this.player.x < 624 && this.player.y > 284 && this.player.y < 338) {
             console.log("exit market place")
             this.level1()
         }
