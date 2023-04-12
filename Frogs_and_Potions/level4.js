@@ -7,7 +7,8 @@ class level4 extends Phaser.Scene {
 
     // incoming data from scene below
   init(data) {
-    this.player = data.player
+    this.playerPos = data.player
+    this.inventory = data.inventory
   }
 
     preload() {
@@ -21,10 +22,19 @@ class level4 extends Phaser.Scene {
     this.load.image("grass", "assets/TX Tileset Grass.png");
     this.load.image("walls", "assets/TX Tileset Wall.png");
 
+    //npc spritesheet
+    this.load.spritesheet('npc1', 'assets/npc_1_spritesheet.png',{frameWidth:64, frameHeight:64});
+    this.load.spritesheet('npc2', 'assets/npc_2_spritesheet.png',{frameWidth:64, frameHeight:64});
+    this.load.spritesheet('npc3', 'assets/npc_3_spritesheet.png',{frameWidth:64, frameHeight:64});
+    this.load.spritesheet('npc4', 'assets/npc_4_spritesheet.png',{frameWidth:64, frameHeight:64});
+    this.load.spritesheet('bluemagician', 'assets/blue_magician_spritesheet.png',{frameWidth:64, frameHeight:64});
+    this.load.spritesheet('redmagician', 'assets/red_magician_spritesheet.png',{frameWidth:64, frameHeight:64});
+
     } // end of preload //
 
     create (){
     console.log("animationScene")
+
 
     //Step 3 - Create the map from main
     let map = this.make.tilemap({ key: "secretgarden" });
@@ -58,9 +68,36 @@ class level4 extends Phaser.Scene {
     var start = map.findObject("objectLayer", obj => obj.name === "start")
 
     this.cursors = this.input.keyboard.createCursorKeys(); 
-    this.player = this.physics.add.sprite(start.x, start.y, 'aesil').play("aesil-left")
-
+    this.player = this.physics.add.sprite(start.x, start.y, 'aesil').play("aesil-left") 
     window.player = this.player
+  
+    this.anims.create({
+        key:'bluemagiciansparkle',
+        frames:this.anims.generateFrameNumbers('bluemagician',
+        { start:0, end:2 }),
+        frameRate:2,
+        repeat:-1
+    });
+
+    this.anims.create({
+        key:'luckpotionshake',
+        frames:this.anims.generateFrameNumbers('luckpotion',
+        { start:0, end:2 }),
+        frameRate:5,
+        repeat:-1
+        });
+    
+
+    this.bluemagician = this.physics.add.sprite(138,240, 'bluemagician').play("bluemagiciansparkle")
+
+    this.physics.add.overlap(
+        this.player, // player
+        [this.bluemagician], // npc
+        this.giveLuckPotion,   // function to call 
+        null, 
+        this
+        );
+    
 
     // camera follow player
     this.cameras.main.startFollow(this.player);
@@ -74,6 +111,11 @@ class level4 extends Phaser.Scene {
     this.physics.add.collider(this.planthedgeLayer,this.player)
     this.plantsLayer.setCollisionByExclusion(-1,true)
     this.physics.add.collider(this.plantsLayer,this.player)
+
+
+    this.player.setCollideWorldBounds(true)
+    this.physics.world.bounds.width = this.groundLayer.width
+    this.physics.world.bounds.height = this.groundLayer.height
 
     } // end of create //
 
@@ -115,8 +157,19 @@ class level4 extends Phaser.Scene {
         }
     } // end of update // 
 
-    level1(player){
-        console.log("exiting secret garden")
-        this.scene.start("level1")
+    level1(){
+        console.log("back to main world")
+        let player = {}
+        player.x = 1224
+        player.y = 474
+        this.scene.start("level1",{player: player})
     }
+
+    giveLuckPotion(){
+        console.log("***givenPotion")
+        this.physics.add.sprite(this.bluemagician.x+50, this.bluemagician.y, 'luckpotion').play("luckpotionshake")
+        player.x = this.bluemagician.x+90
+        window.potionGiven++
+        console.log(window.potionGiven)
+      }
 }

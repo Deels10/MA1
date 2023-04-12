@@ -8,6 +8,7 @@ class level2 extends Phaser.Scene {
     // incoming data from scene below
   init(data) {
     this.player = data.player
+    this.inventory = data.inventory
   }
 
     preload() {
@@ -21,10 +22,12 @@ class level2 extends Phaser.Scene {
     this.load.image("grass", "assets/TX Tileset Grass.png");
     this.load.image("walls", "assets/TX Tileset Wall.png");
 
+
     } // end of preload //
 
     create (){
     console.log("animationScene")
+
 
     //Step 3 - Create the map from main
     let map = this.make.tilemap({ key: "witch'spotionshop" });
@@ -54,14 +57,13 @@ class level2 extends Phaser.Scene {
     this.furnitureLayer = map.createLayer("furnitureLayer",tilesArray,0,0);
     this.itemsLayer = map.createLayer("itemsLayer",tilesArray,0,0);
     this.plantsLayer = map.createLayer("plantsLayer",tilesArray,0,0);
-    
 
     var start = map.findObject("objectLayer", obj => obj.name === "start")
 
     this.cursors = this.input.keyboard.createCursorKeys(); 
-    this.player = this.physics.add.sprite(start.x, start.y, 'aesil').play("aesil-up")
-
+    this.player = this.physics.add.sprite(start.x, start.y, 'aesil').play("aesil-up") 
     window.player = this.player
+    
 
     // camera follow player
     this.cameras.main.startFollow(this.player);
@@ -73,6 +75,10 @@ class level2 extends Phaser.Scene {
     this.physics.add.collider(this.itemsLayer,this.player)
     this.plantsLayer.setCollisionByExclusion(-1,true)
     this.physics.add.collider(this.plantsLayer,this.player)
+
+    this.player.setCollideWorldBounds(true)
+    this.physics.world.bounds.width = this.groundLayer.width
+    this.physics.world.bounds.height = this.groundLayer.height
 
     } // end of create //
 
@@ -115,8 +121,11 @@ class level2 extends Phaser.Scene {
         }
     } // end of update // 
 
-    level1(player){
-        console.log("exiting witch shop")
-        this.scene.start("level1")
+    level1(){
+        console.log("back to main world")
+        let player = {}
+        player.x = 962
+        player.y = 1085
+        this.scene.start("level1",{player: player})
     }
 }
