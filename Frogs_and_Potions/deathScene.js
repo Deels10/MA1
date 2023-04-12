@@ -14,7 +14,7 @@ class deathScene extends Phaser.Scene {
         this.add.image(0, 0, 'deathscene').setOrigin(0, 0);
         console.log("***you died")
 
-        window.deathSound - this.sound.add("deathSound").setLoop(true).play()
+        window.deathSound - this.sound.add("deathSound").play()
         //reload 3 hearts 
         window.flower = 0
         window.herb = 0
