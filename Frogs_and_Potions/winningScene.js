@@ -18,7 +18,8 @@ class winningScene extends Phaser.Scene {
         window.lilypad = 0
         window.mushroom = 0
         window.potion = 0
-        window.heart = 3;
+        window.heart = 3
+        window.potionGiven = 0;
 
         // 'T' key
         var keyT = this.input.keyboard.addKey(84);
